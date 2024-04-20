@@ -1,0 +1,14 @@
+CC=gcc
+LIBS=-lglut -lGLU -lGL -lm
+INCLUDES=-I/usr/include/GL
+CCOPTS=-Wall -o3 -std=gnu99 $(INCLUDES)
+
+phony clean all
+
+run: $(BINS)
+
+all: $(BINS)
+
+.test: test_slab.c $(OBJS)
+       $(CC) $(LIBS) $(CCOPTS)
+

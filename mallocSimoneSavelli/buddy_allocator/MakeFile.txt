@@ -1,0 +1,14 @@
+CC=gcc
+LIBS = -lglut -lGLU -lGL -lm
+INCLUDES = -I/usr/include/GL
+CCOPTS = -Wall -o3 -std=gnu99 $(INCLUDES)
+
+.phony clean all
+
+all: buddy_allocator
+
+buddy_allocator.o: buddy_allocator.c buddy_allocator.h
+		   gcc $(CCOPTS) -c -o buddy_allocator.o buddy_allocator.c
+
+
+.test: buddy_allocator_test.c $(INCLUDES) $(CC) $(LIBS)
