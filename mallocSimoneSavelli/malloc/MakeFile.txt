@@ -1,13 +1,20 @@
-CC = gcc
-LIBS = -lglut -lGLU -lGL -lm
-INCLUDES = -I/usr/include/GL
-CCOPTS = -Wall -o3 -std=gnu99 $(INCLUDES)
+CC=gcc
+CFLAGS = -Wall -Wextra -std=c99
+LDFLAGS = 
 
-.phony clean all
+SRCS = malloc.c
+OBJS = $(SRCS:.c=.o)
+TARGET = malloc
 
-all: malloc
+.phony: all clean
 
-malloc.o: malloc.c malloc.h
-	  gcc $(CCOPTS) -c -o malloc.o malloc.c
+$(TARGET): $(OBJS)
+           $(CC) $(LDFLAGS) -o $@ $^
 
-.test: malloc_test.c $(INCLUDES) $(CC) $(LIBS)
+%.o: %.c
+    $(CC) $(CFLAGS) -c -o $@ $^
+
+clean:
+    rm -f $(OBJS) $(TARGET)
+
+.test: malloc_test.c $(OBJS)
