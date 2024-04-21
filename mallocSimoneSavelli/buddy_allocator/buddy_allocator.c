@@ -1,85 +1,130 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <buddy_allocator.h>
+#include <math.h>
+#include "buddy_allocator.h"
+
+#define MIN_BLOCK_SIZE 16
+
+static Buddy *free_list[32]; //array di liste libere
+static int total_memory_size;
+
+//funzione per calcolare la cella
+static int ceil_log2(int n){
+	return (int)ceil(log2(n));
+}
+//funzione per dividere un blocco in due parti
+static void split(Buddy *block){
+	int size = block->size / 2;
+	block->size = size;
+	Buddy *buddy = (Buddy*)((char*)block+size);
+	buddy->size = size;
+	buddy->is_free = 1;
+	buddy->next = free_list[ceil_log2(size)];
+	free_list[ceil_log2(size)] = buddy;
+}
+
+//funzione per cercare un blocco libero di dimensione sufficente
+static Buddy *find_block(int size){
+	int i = ceil_log2(size);
+	while(i < 32){
+		Buddy *block = free_list[i];
+		if(block !=NULL){
+			free_list[i] = block->next;
+			return block;
+		}
+		i++;
+	}
+	return NULL;
+}
+
+//funzione per unire 2 blocchi 
+static Buddy *merge(Buddy *block){
+	int size = block->size * 2;
+	int buddy_id = ((char*)block - (char*)free_list[ceil_log2(size)]) / size;
+	Buddy *buddy = (Buddy*)((char*)free_list[ceil_log2(size)] + buddy_id * size);
+	if (buddy->is_free && buddy->size==size){
+		if(buddy==free_list[ceil_log2(size)]){
+			free_list[ceil_log2(size)] = buddy->next;
+		} else {
+			Buddy *curr = free_list[ceil_log2(size)];
+			while(curr->next != buddy){
+				curr = curr->next;
+			}
+			curr->next = buddy->next;
+		}
+		if(block > buddy){
+			block = buddy;
+		}
+		block->size = size;
+		block->is_free = 1;
+		return block;
+	}
+	return NULL;
+}
+
+
+
+//inizializza il buddy
+void buddyAllocator_init(int size){
+	total_memory_size = size;
+	int level = ceil_log2(size);
+	free_list[level] = (Buddy*)malloc(size);
+	free_list[level]->size = size;
+	free_list[level]->is_free = 1;
+	free_list[level]->next = NULL;
+}
 
 
 //allocatore di memoria
-void* BuddyAllocator_malloc(*BuddyAllocator* alloc, int size){
-  int mem_size = (1<<alloc->num_levels)*alloc->min_bucket_size;
-  int level = floor(log2(mem_size/(size+8)));
-  if(level > alloc->num_levels)
-    level = alloc->num_levels;
-
-  BuddyListItem* buddy = BuddyAllocator_getBuddy(alloc, level);
-  if(!buddy) return 0;
-
-  BuddyListItem** target = (BuddyListItem**)(buddy->start);
-  *target = buddy;
-  return buddy->start+8;
+void* buddyAllocator_malloc(int size){
+	if(size<0|| size>total_memory_size)
+		return NULL;
+	
+	size = (int)pow(2, ceil_log2(size));
+	
+	int i = ceil_log2(size);
+	while(i<32){
+		Buddy *block = find_block(size);
+		if(block != NULL){
+			while(block->size > size){
+				split(block);
+			}
+			block->is_free = 0;
+			return (void*)block;
+		}
+	}
+	return NULL;
 }
-
-
-
- //restituisce il buddy
-BuddyListItem* BuddyAllocator_getBuddy(BuddyAllocator* alloc, int level){
-  if(level < 0)
-    return 0;
-  if(!alloc->free[level].size){
-    BuddyListItem* parent_ptr = BuddyAllocator_getBuddy(alloc, level-1);
-    if(!parent_ptr)
-      return 0;
-
-    int left_idx = parent_ptr->idx<<1;
-    int right_idx = left_idx+1;
-
-    BuddyListItem* left_ptr = BuddyAllocator_createListItem(alloc, left_idx, parent_ptr);
-    BuddyListItem* right_ptr = BuddyAllocator_createListItem(alloc, right_idx, parent_ptr);
-
-    left_ptr->buddy_ptr = right_ptr;
-    right_ptr->buddy_ptr = left_ptr;
-  }
-  if(alloc->free[level].size){
-    BuddyListItem* item = (BuddyListItem*)list_popFront(alloc->free+level);
-    return item;
-  }
-  return 0;
-}
-
-
-
-//rilascia il buddy
-void BuddyAllocator_releaseBuddy(BuddyAllocator* alloc, BuddyListItem* item){
-  BuddyListItem* parent_ptr = item->parent_ptr;
-  BuddyListItem *buddy_ptr = item->buddy_ptr;
-
-  List_pushFront(&alloc->free[item->level], (ListItem*)item);
-  if(!parent_ptr)
-    return;
-  if(buddy_ptr->list.prev==0 && buddy_ptr->list.next==0)
-    return;
-
-  BuddyAllocator_destroyListItem(alloc, item);
-  BuddyAllocator_destroyListItem(alloc, buddy_ptr);
-  buddyAllocator_releaseBuddy(alloc, parent_ptr);
-}
-
 
 
 //free del buddy
-void BuddyAllocator_free(BuddyAllocator* alloc, void* mem){
-  char* p = (char*)mem;
-  p=p-8;
-  BuddyListItem** buddy_ptr = (BuddyListItem**)p;
-  BuddyListItem* buddy = *buddy_ptr;
-  assert(buddy->start==p);
-  BuddyAllocator_releaseBuddy(alloc, buddy);
+void buddyAllocator_free(void* mem){
+	if(mem == NULL)
+		return;
+	
+	Buddy *block = (Buddy *)mem;
+	block->is_free = 1;
+	
+	while(block->size < total_memory_size){
+		Buddy *merged_block = merge(block);
+		if(merged_block == NULL)
+			break;
+		block = merged_block;
+	}
+	block->next = free_list[ceil_log2(block->size)];
+	free_list[ceil_log2(block->size)] = block;
 }
+ 
 
-
-
-//inizializzazione del buddy
-void BuddyAllocator_init(BuddyAllocator* alloc, int num_levels, char* buffer, int buffer_size, char* memory, int min_bucket_size){
-  alloc->num_levels = num_levels;
-  alloc->min_bucket_size = min_bucket_size;
-  
+//stampa lo stato del buddy
+void buddyAllocator_print(){
+	printf("stato del buddy:\n");
+	for(int i=4; i<total_memory_size; i++){
+		Buddy *curr = free_list[ceil_log2(i)];
+		printf("size: %d\n", i);
+		while(curr != NULL){
+			printf("block address: %p, free: %s\n", curr, curr->is_free? "yes" : "no");
+			curr = curr->next;
+		}
+	}
 }
