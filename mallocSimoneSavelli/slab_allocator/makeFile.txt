@@ -1,14 +1,21 @@
 CC=gcc
-LIBS=-lglut -lGLU -lGL -lm
-INCLUDES=-I/usr/include/GL
-CCOPTS=-Wall -o3 -std=gnu99 $(INCLUDES)
+CFLAGS = -Wall -Wextra -std=c99
+LDFLAGS = 
 
-phony clean all
+SRCS = slab_allocator.c
+OBJS = $(SRCS:.c=.o)
+TARGET = slab_allocator
 
-run: $(BINS)
+.phony: all clean
 
-all: $(BINS)
+$(TARGET): $(OBJS)
+           $(CC) $(LDFLAGS) -o $@ $^
+
+%.o: %.c
+    $(CC) $(CFLAGS) -c -o $@ $^
+
+clean:
+    rm -f $(OBJS) $(TARGET)
 
 .test: test_slab.c $(OBJS)
-       $(CC) $(LIBS) $(CCOPTS)
-
+    
