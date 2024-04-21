@@ -1,14 +1,20 @@
 CC=gcc
-LIBS = -lglut -lGLU -lGL -lm
-INCLUDES = -I/usr/include/GL
-CCOPTS = -Wall -o3 -std=gnu99 $(INCLUDES)
+CFLAGS = -Wall -Wextra -std=c99
+LDFLAGS = 
 
-.phony clean all
+SRCS = buddy_allocator.c
+OBJS = $(SRCS:.c=.o)
+TARGET = buddy_allocator
 
-all: buddy_allocator
+.phony: all clean
 
-buddy_allocator.o: buddy_allocator.c buddy_allocator.h
-		   gcc $(CCOPTS) -c -o buddy_allocator.o buddy_allocator.c
+$(TARGET): $(OBJS)
+           $(CC) $(LDFLAGS) -o $@ $^
 
+%.o: %.c
+    $(CC) $(CFLAGS) -c -o $@ $^
 
-.test: buddy_allocator_test.c $(INCLUDES) $(CC) $(LIBS)
+clean:
+    rm -f $(OBJS) $(TARGET)
+
+.test: buddy_allocator_test.c $(OBJS)
