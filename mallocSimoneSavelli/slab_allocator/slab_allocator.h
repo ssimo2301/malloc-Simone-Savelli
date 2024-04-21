@@ -21,12 +21,12 @@ typedef struct {
 SlabAllocator* slab_allocator_create();
 
 //distruggi lo slab
-void SlabAllocator_destroy(SlabAllocator* allocator);
+void slabAllocator_destroy(SlabAllocator* allocator);
 
 //restituisco l'oggetto
-Object* SlabAllocator_getObject(PoolAllocator* allocator);
+Object* slabAllocator_object(SlabAllocator* allocator);
 
 //rilascio il blocco di memoria
-void SlabAllocator_deallocateObject(SlabAllocator* allocator, Object *obj);
+void slabAllocator_deallocateObject(SlabAllocator* allocator, Object *obj);
 
 
