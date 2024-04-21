@@ -17,10 +17,10 @@ int main(){
   printf("init...\n");
   BuddyAllocator_init(&alloc, BUDDY_LEVELS, buffer, BUFFER_SIZE, memory, MIN_BUCKET_SZIE);
   printf("done\n");
-  void* p1 = BuddyAllocator_malloc(&alloc, 100);
-  void* p2 = BuddyAllocator_malloc(&alloc, 100);
-  void* p3 = BuddyAllocator_malloc(&alloc, 100000);
-  BuddyAllocator_free(&alloc, p1);
-  BuddyAllocator_free(&alloc, p2);
-  BuddyAllocator_free(&alloc, p3);
+  void* p1 = BuddyAllocator_malloc(100);
+  void* p2 = BuddyAllocator_malloc(100);
+  void* p3 = BuddyAllocator_malloc(100000);
+  BuddyAllocator_free(p1);
+  BuddyAllocator_free(p2);
+  BuddyAllocator_free(p3);
 }
