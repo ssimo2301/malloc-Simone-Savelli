@@ -11,7 +11,7 @@
 char buffer[BUFFER_SIZE];
 char memory[MEMORY_SIZE];
 
-BuddyAllocator alloc;
+Buddy alloc;
 int main(){
   printf("init...\n");
   void* p1 = buddyAllocator_malloc(100);
