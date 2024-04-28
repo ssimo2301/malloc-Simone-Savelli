@@ -9,7 +9,7 @@ int main(){
 	Object *o1 = slabAllocator_object(allocator);
 	o1->data = 42;
 
-	Object *02 = slabAllocator_Object(allocator);
+	Object *o2 = slabAllocator_object(allocator);
 	o2->data = 99;
 
 	slabAllocator_deallocateObject(allocator, o2);
