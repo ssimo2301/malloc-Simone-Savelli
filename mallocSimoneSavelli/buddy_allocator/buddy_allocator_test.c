@@ -1,4 +1,5 @@
 #include "buddy_allocator.h"
+#include "buddy_allocator.c"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -12,11 +13,7 @@ char memory[MEMORY_SIZE];
 
 BuddyAllocator alloc;
 int main(){
-  int req_size = BuddyAllocator_calcSize(BUDDY_LEVELS);
-  printf("size requested for inizialization: %d\n", req_size);
   printf("init...\n");
-  BuddyAllocator_init(&alloc, BUDDY_LEVELS, buffer, BUFFER_SIZE, memory, MIN_BUCKET_SZIE);
-  printf("done\n");
   void* p1 = BuddyAllocator_malloc(100);
   void* p2 = BuddyAllocator_malloc(100);
   void* p3 = BuddyAllocator_malloc(100000);
