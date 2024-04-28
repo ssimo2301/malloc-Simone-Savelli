@@ -1,4 +1,21 @@
-.phony: all
+CC=gcc
+CFLAGS = -Wall -Wextra -std=c99
+LDFLAGS = 
 
-all: make -C mallocSimoneSavelli run
-     mv mallocSimoneSavelli/.test
+SRCS = malloc.c
+OBJS = $(SRCS:.c=.o)
+TARGET = malloc
+
+.phony: all clean
+
+$(TARGET): $(OBJS)
+	$(CC) $(LDFLAGS) -o $@ $^
+
+%.o: %.c
+	$(CC) $(CFLAGS) -c -o $@ $^
+
+clean:
+	rm -f $(OBJS) $(TARGET)
+
+.test: test.c $(OBJS)
+
