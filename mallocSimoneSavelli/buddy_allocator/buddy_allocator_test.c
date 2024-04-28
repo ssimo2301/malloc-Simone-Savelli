@@ -14,10 +14,10 @@ char memory[MEMORY_SIZE];
 BuddyAllocator alloc;
 int main(){
   printf("init...\n");
-  void* p1 = BuddyAllocator_malloc(100);
-  void* p2 = BuddyAllocator_malloc(100);
-  void* p3 = BuddyAllocator_malloc(100000);
-  BuddyAllocator_free(p1);
-  BuddyAllocator_free(p2);
-  BuddyAllocator_free(p3);
+  void* p1 = buddyAllocator_malloc(100);
+  void* p2 = buddyAllocator_malloc(100);
+  void* p3 = buddyAllocator_malloc(100000);
+  buddyAllocator_free(p1);
+  buddyAllocator_free(p2);
+  buddyAllocator_free(p3);
 }
