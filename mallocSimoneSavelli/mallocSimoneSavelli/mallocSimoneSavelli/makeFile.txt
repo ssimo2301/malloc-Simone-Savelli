@@ -1,4 +1,0 @@
-.phony: all
-
-all: make -C mallocSimoneSavelli run
-     mv mallocSimoneSavelli/.test
