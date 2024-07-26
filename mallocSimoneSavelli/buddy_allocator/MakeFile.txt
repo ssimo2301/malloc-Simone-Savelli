@@ -17,4 +17,3 @@ $(TARGET): $(OBJS)
 clean:
     rm -f $(OBJS) $(TARGET)
 
-.test: buddy_allocator_test.c $(OBJS)
