@@ -38,14 +38,14 @@ void* PoolAllocator_getBlock(PoolAllocator* allocator){
 	int detached_idx = allocator->first_idx;
 	allocator->first_idx = allocator->free_list[allocator->first_idx];
 	--allocator->size;
-	allocator->free_list[detached_idx] = DetachedIdx;
+	allocator->free_list[detached_idx] = DetachIdx;
 	char* block_address = allocator->buffer + (detached_idx * allocator->item_size);
 	return block_address;
 }
 
 
 
-PoolAllocatorResult PoolAllocator_releaseBlock(PoolAllocator* allocator, void* block){
+PoolAllocatorResult PoolAllocator_releaseBlock(PoolAllocator* allocator, void* block_){
 	char* block = (char*)block_;
 	int offset = block - allocator->buffer;
 	if(offset % allocator->item_size)
@@ -53,11 +53,11 @@ PoolAllocatorResult PoolAllocator_releaseBlock(PoolAllocator* allocator, void* b
 	int idx = offset / allocator->item_size;
 	if(idx<0 || idx>=allocator->size_max)
 		return OutOfRange;
-	if(allocator->free_list[idx] != DetachedIdx)
+	if(allocator->free_list[idx] != DetachIdx)
 		return DoubleFree;
 	allocator->free_list[idx] = allocator->first_idx;
 	allocator->first_idx = idx;
-	++a->size;
+	++allocator->size;
 	return Success;
 }
 
