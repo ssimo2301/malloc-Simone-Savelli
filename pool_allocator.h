@@ -6,7 +6,7 @@ typedef enum {
 	DoubleFree = -4
 } PoolAllocatorResult;
 
-typedef stuct PoolAllocator{
+typedef struct PoolAllocator{
 	char* buffer;
 	int* free_list;
 	int buffer_size;

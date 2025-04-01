@@ -20,7 +20,7 @@ ListItem* List_find(ListHead* head, ListItem* item){
 }
 
 
-ListItem* List_insert(ListHead* head, ListItem* previous, ListItem* item){
+ListItem* List_insert(ListHead* head, ListItem* prev, ListItem* item){
 	if(item->next || item->prev)
 		return 0;
 	ListItem* instance = List_find(head, item);
@@ -61,7 +61,7 @@ ListItem* List_detach(ListHead* head, ListItem* item){
 	if(item == head->last)
 		head->last = prev;
 	head->size--;
-	item_next = item->prev = 0;
+	item->next = item->prev = 0;
 	return item;
 }
 

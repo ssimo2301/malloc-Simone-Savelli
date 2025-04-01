@@ -19,14 +19,14 @@ int main(){
 	for(int i=0; i<num_items+10; i++){
 		void* block = PoolAllocator_getBlock(&allocator);
 		blocks[i] = block;
-		printf("allocation %d, block %p, size %d\n", i, block, allocator->size);
+		printf("allocation %d, block %p, size %d\n", i, block, allocator.size);
 	}
 	
 	//release all memory
 	for(int i=0; i<num_items+10; i++){
 		void* block = blocks[i];
 		if(block){
-			printf("releasing...idx: %d, block %p, free %d ...", i, block, allocator->size);
+			printf("releasing...idx: %d, block %p, free %d ...", i, block, allocator.size);
 			PoolAllocatorResult release_result = PoolAllocator_releaseBlock(&allocator, block);
 			printf("%s\n", PoolAllocator_sterror(release_result));
 		}
@@ -36,7 +36,7 @@ int main(){
 	for(int i=0; i<num_items+10; i++){
 		void* block = blocks[i];
 		if(block){
-			printf("releasing...idx: %d, block %p, free %d ...", i, block, allocator->size);
+			printf("releasing...idx: %d, block %p, free %d ...", i, block, allocator.size);
 			PoolAllocatorResult release_result = PoolAllocator_releaseBlock(&allocator, block);
 			printf("%s\n", PoolAllocator_sterror(release_result));
 		}
@@ -46,12 +46,12 @@ int main(){
 	for(int i=0; i<num_items-5; i++){
 		void* block = PoolAllocator_getBlock(&allocator);
 		blocks[i] = block;
-		printf("allocation %d, block %p, size %d\n", i, block, allocator->size);
+		printf("allocation %d, block %p, size %d\n", i, block, allocator.size);
 	}
 	for(int i=num_items-1; i>=0; i--){
 		void* block = blocks[i];
 		if(block){
-			printf("releasing...idx: %d, block %p, free %d ...", i, block, allocator->size);
+			printf("releasing...idx: %d, block %p, free %d ...", i, block, allocator.size);
 			PoolAllocatorResult release_result = PoolAllocator_releaseBlock(&allocator, block);
 			printf("%s\n", PoolAllocator_sterror(release_result));
 		}
@@ -61,12 +61,12 @@ int main(){
 	for(int i=0; i<num_items; i++){
 		void* block = PoolAllocator_getBlock(&allocator);
 		blocks[i] = block;
-		printf("allocation %d, block %p, size %d\n", i, block, allocator->size);
+		printf("allocation %d, block %p, size %d\n", i, block, allocator.size);
 	}
 	for(int i=num_items-1; i>=0; i-=2){
 		void* block = blocks[i];
 		if(block){
-			printf("releasing...idx: %d, block %p, free %d ...", i, block, allocator->size);
+			printf("releasing...idx: %d, block %p, free %d ...", i, block, allocator.size);
 			PoolAllocatorResult release_result = PoolAllocator_releaseBlock(&allocator, block);
 			printf("%s\n", PoolAllocator_sterror(release_result));
 		}
@@ -74,7 +74,7 @@ int main(){
 	for(int i=num_items-2; i>=0; i-=2){
 		void* block = blocks[i];
 		if(block){
-			printf("releasing...idx: %d, block %p, free %d ...", i, block, allocator->size);
+			printf("releasing...idx: %d, block %p, free %d ...", i, block, allocator.size);
 			PoolAllocatorResult release_result = PoolAllocator_releaseBlock(&allocator, block);
 			printf("%s\n", PoolAllocator_sterror(release_result));
 		}

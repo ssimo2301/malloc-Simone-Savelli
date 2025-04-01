@@ -34,7 +34,7 @@ BuddyListItem* BuddyAllocator_createListItem(BuddyAllocator* alloc, int idx, Bud
 	BuddyListItem* item = (BuddyListItem*)PoolAllocator_getBlock(&alloc->list_allocator);
 	item->idx = idx;
 	item->level = levelIdx(idx);
-	item->start = alloc->memory + ((idx-(1<<levelIdx(idx)))<<(alloc->num_levels-item_level))*alloc->min_bucket_size;
+	item->start = alloc->memory + ((idx-(1<<levelIdx(idx)))<<(alloc->num_levels-item->level))*alloc->min_bucket_size;
 	item->size = (1<<(alloc->num_levels-item->level))*alloc->min_bucket_size;
 	item->parent_ptr = parent_ptr;
 	item->buddy_ptr = 0;
@@ -58,13 +58,13 @@ void BuddyAllocator_init(BuddyAllocator* alloc, int num_levels, char* buffer, in
 	assert(num_levels < MAX_LEVELS);
 	assert(buffer_size >= BuddyAllocator_calcSize(num_levels));
 	int list_items = 1<<(num_levels+1);
-	int list_alloc_size=(sizeof(BuddyListItem)+sizeof(int))*list_items);
+	int list_alloc_size=(sizeof(BuddyListItem)+sizeof(int))*list_items;
 	printf("BUDDY INITIALIZING\n");
 	printf("\tlevels: %d", num_levels);
 	printf("\tmax list entries %d bytes\n", (1<<num_levels)*min_bucket_size);
 	char *list_start = buffer;
 	PoolAllocatorResult init_result = PoolAllocator_init(&alloc->list_allocator, sizeof(BuddyListItem), list_items, 							     list_start, list_alloc_size);
-	printf("%s\n" PoolAllocator_sterror(init_result));
+	printf("%s\n", PoolAllocator_sterror(init_result));
 	for(int i=0; i<MAX_LEVELS; i++)
 		List_init(alloc->free+i);
 	BuddyAllocator_createListItem(alloc, 1, 0);
@@ -104,7 +104,7 @@ void BuddyAllocator_releaseBuddy(BuddyAllocator* alloc, BuddyListItem* item){
 		return;
 	if(buddy_ptr->list.prev==0 && buddy_ptr->list.next==0)
 		return;
-	printf("merge %d\n", item_level);
+	printf("merge %d\n", item->level);
 	BuddyAllocator_destroyListItem(alloc, item);
 	BuddyAllocator_destroyListItem(alloc, buddy_ptr);
 	BuddyAllocator_releaseBuddy(alloc, parent_ptr);
