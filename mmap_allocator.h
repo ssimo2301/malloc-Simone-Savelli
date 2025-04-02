@@ -1,3 +1,9 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <assert.h>
+#include <math.h>
+
 #define PAGE_SIZE 4096
 
 typedef struct {

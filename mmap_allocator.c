@@ -3,6 +3,11 @@
 #include <unistd.h>
 #include <assert.h>
 #include <math.h>
+#include <string.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <sys/mman.h>
 #include "mmap_allocator.h"
 
 #define PAGE_SIZE 4096

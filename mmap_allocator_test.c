@@ -3,7 +3,7 @@
 
 #define PAGE_SIZE 4096
 
-MmapAllocator allocator;
+MmapAllocator* allocator;
 
 
 
