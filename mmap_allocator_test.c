@@ -17,14 +17,14 @@ int main(){
 	printf("done\n");
 	
 	void* p1 = MmapAllocator_alloc(allocator, 100);
-	if(p1) printf("allocazione p1 riuscita");
+	if(p1) printf("allocazione p1 riuscita\n");
 	void* p2 = MmapAllocator_alloc(allocator, 100);
-	if(p2) printf("allocazione p2 riuscita");
+	if(p2) printf("allocazione p2 riuscita\n");
 	void* p3 = MmapAllocator_alloc(allocator, 1000000);
-	if(p3) printf("allocazione p3 riuscita");
+	if(p3) printf("allocazione p3 riuscita\n");
 	//MmapAllocator_free(&allocator, p1);
 	//MmapAllocator_free(&allocator, p2);
 	//MmapAllocator_free(&allocator, p3);
 
-	MmapAllocator_destroy(&allocator);
+	MmapAllocator_destroy(allocator);
 }

@@ -42,6 +42,7 @@ void MmapAllocator_destroy(MmapAllocator* allocator){
 			}
 		}
 		free(allocator);
+		printf("destroy riuscita\n");
 	}
 }
 
