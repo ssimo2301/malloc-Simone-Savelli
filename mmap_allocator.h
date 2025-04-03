@@ -21,7 +21,6 @@ void MmapAllocator_destroy(MmapAllocator* allocator);
 //alloca la memoria per un mmap
 void* MmapAllocator_alloc(MmapAllocator* allocator, size_t size);
 
-//libera la memoria di una mmap
-void MmapAllocator_free(MmapAllocator* allocator, void* mem);
+
 
 
