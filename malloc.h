@@ -4,6 +4,7 @@
 #include "buddy_allocator.h"
 #include "mmap_allocator.h"
 
+#define PAGE_SIZE 4096
 
 
 typedef struct {
