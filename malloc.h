@@ -6,12 +6,15 @@
 
 #define BUDDY_MEMORY_SIZE (1024*1024) //1MB
 #define PAGE_QUARTER (PAGE_SIZE/4)
+#define BITMAP_BITS (BUDDY_MEMORY_SIZE/PAGE_QUARTER)
+#define BITMAP_BYTES ((BITMAP_BITS + 7)/8)
+#define BITMAP_BUFFER_SIZE ((BITMAP_BYTES + sizeof(int) - 1)/ sizeof(int))
 
 
 typedef struct {
 	BitMap bitmap;	
 	BuddyAllocator buddy;	
-	int bitmap_buffer[BitMap_getBytes(BUDDY_MEMORY_SIZE / PAGE_QUARTER) /sizeof(int)];
+	int bitmap_buffer[BITMAP_BUFFER_SIZE];
 	MmapAllocator* mmap;
 	char buddy_memory[BUDDY_MEMORY_SIZE];
 	char buddy_meta_buffer[0x10000];
