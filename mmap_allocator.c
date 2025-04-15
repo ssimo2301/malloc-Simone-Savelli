@@ -53,7 +53,7 @@ void* MmapAllocator_alloc(MmapAllocator* allocator, size_t size){
 		perror("error nell'allocazione");
 		return NULL;
 	}
-	printf("allocazione riuscita");
+	printf("allocazione riuscita\n");
 	return allocator->ptr;
 }
 
