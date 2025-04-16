@@ -1,5 +1,6 @@
 #pragma once
 
+#include <stdalign.h>
 #include "buddy_allocator.h"
 #include "mmap_allocator.h"
 #include "bit_map.h"

@@ -16,7 +16,11 @@ void BitMap_init(BitMap* bit_map, int num_bits, int* buffer){
 
 
 void BitMap_setBit(BitMap* bit_map, int bit_num, int status){
-	int byte_num = bit_num>>3;
+	if(bit_num >= bit_map->buffer_size*8){
+		fprintf(stderr, "Errore: bit_num %d fuori dal range della bitmap\n", bit_num);
+		return;
+	}	
+	int byte_num = bit_num>>3;	
 	assert(byte_num < bit_map->buffer_size);
 	int bit_in_byte = byte_num&0x03;
 	if(status)
@@ -28,7 +32,11 @@ void BitMap_setBit(BitMap* bit_map, int bit_num, int status){
 
 int BitMap_bit(const BitMap* bit_map, int bit_num){
 	int byte_num = bit_num>>3;
-	assert(byte_num < bit_map->buffer_size);
 	int bit_in_byte = byte_num&0x03;
+	if(byte_num >= bit_map->buffer_size){
+		fprintf(stderr, "Errore: bit_num=%d è fuori dai limiti della bitmap (buffer_size=%d bytes)\n", bit_num, bit_map->buffer_size);	
+	}
+	//assert(byte_num < bit_map->buffer_size);
+	
 	return (bit_map->buffer[byte_num] & (1<<bit_in_byte))!=0;
 }
